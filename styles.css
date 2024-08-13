@@ -1,5 +1,3 @@
-/* styles.css */
-
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -9,59 +7,47 @@ body {
 
 header {
     background-color: #333;
-    color: #fff;
-    padding: 20px 0;
+    color: white;
+    padding: 1em;
     text-align: center;
 }
 
-h1 {
-    margin: 0;
-}
-
 main {
-    padding: 20px;
+    padding: 1em;
 }
 
-#movies {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+.movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
 }
 
-.movie {
-    background-color: #fff;
-    border-radius: 10px;
+.movie-item {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s;
+    width: 200px;
 }
 
-.movie:hover {
-    transform: scale(1.05);
-}
-
-.movie img {
+.movie-item img {
     width: 100%;
-    border-bottom: 1px solid #ccc;
+    height: auto;
 }
 
-.movie-info {
-    padding: 15px;
+.movie-item h3 {
+    margin: 0.5em;
+    font-size: 1em;
 }
 
-.movie-info h3 {
-    margin: 0 0 10px 0;
-}
-
-.movie-info p {
-    margin: 0;
-    color: #666;
+.movie-item p {
+    margin: 0.5em;
+    font-size: 0.9em;
 }
 
 footer {
     background-color: #333;
-    color: #fff;
+    color: white;
+    padding: 1em;
     text-align: center;
-    padding: 10px 0;
-    margin-top: 20px;
 }
