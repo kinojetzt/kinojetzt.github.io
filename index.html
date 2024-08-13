@@ -3,37 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photography Portfolio</title>
+    <title>Movie Listings</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Photography Portfolio</h1>
+        <h1>Current Movies in Cinemas</h1>
     </header>
     <main>
-        <section class="gallery">
-            <div class="gallery-item">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Altja_j%C3%B5gi_Lahemaal.jpg/1200px-Altja_j%C3%B5gi_Lahemaal.jpg" alt="Photo 1">
-            </div>
-            <div class="gallery-item">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKH0wcGqpfn5cn9KdnpmrNgmdx5ucfLzFofA&s" alt="Photo 2">
-            </div>
-            <div class="gallery-item">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS35EKRz1eyOg1jdJ7BLmmezM7R-6xRGAlOBg&s" alt="Photo 3">
-            </div>
-            <div class="gallery-item">
-                <img src="https://onetreeplanted.org/cdn/shop/files/forest-in-sunrise-1661526783577.webp?v=1686596179" alt="Photo 4">
-            </div>
-            <div class="gallery-item">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSXEu06I59vE60_PzAz-t11kjMrnubijJ85w&s" alt="Photo 5">
-            </div>
-            <div class="gallery-item">
-                <img src="images/photo6.jpg" alt="Photo 6">
-            </div>
-        </section>
+        <div id="movie-list" class="movie-list"></div>
     </main>
+    <div id="speech-bubble" class="speech-bubble hidden">
+        <div id="trailer-container" class="trailer-container"></div>
+        <div id="bubble-content" class="bubble-content"></div>
+    </div>
     <footer>
-        <p>&copy; 2024 Your Photography Portfolio</p>
+        <p>&copy; 2024 Movie Listings</p>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>
