@@ -1,12 +1,30 @@
-// script.js
-
-const apiKey = '330845779e6588abc657b964887317fb';
+const apiToken = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzMzA4NDU3NzllNjU4OGFiYzY1N2I5NjQ4ODczMTdmYiIsIm5iZiI6MTcyMzU4MTY5Ny43MTgyMjksInN1YiI6IjY2YmJiZTU3OWVhOWNlZjdhZDBlNjZlMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TdUsr1_GkTbv8BeIDJ0cT7DT850v2miUCLgurFSYha4';
 const movieContainer = document.getElementById('movies');
 
 async function fetchMovies() {
-    const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=en-US&page=1`);
-    const data = await response.json();
-    displayMovies(data.results);
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${apiToken}`,
+                'Content-Type': 'application/json;charset=utf-8'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+
+        const data = await response.json();
+        if (data.results) {
+            displayMovies(data.results);
+        } else {
+            throw new Error('No movies found or another error occurred.');
+        }
+    } catch (error) {
+        console.error('Fetch error: ', error);
+        alert('Failed to fetch movies: ' + error.message);
+    }
 }
 
 function displayMovies(movies) {
@@ -29,5 +47,4 @@ function displayMovies(movies) {
     });
 }
 
-// Initialize the movie fetch on page load
 fetchMovies();
