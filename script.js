@@ -1,6 +1,6 @@
 // script.js
 
-const apiKey = 'YOUR_TMDB_API_KEY';
+const apiKey = '330845779e6588abc657b964887317fb';
 const movieContainer = document.getElementById('movies');
 
 async function fetchMovies() {
