@@ -141,4 +141,13 @@ footer {
     flex-direction: column;
 }
 
-.tr
+.trailer-container {
+    width: 100%;
+    height: 220px; /* Increased height for trailer */
+    overflow: hidden;
+}
+
+.trailer-container iframe {
+    width: 100%;
+    height: 100%;
+}
