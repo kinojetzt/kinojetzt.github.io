@@ -1,4 +1,4 @@
-// TMDB key (exposed in frontend for search suggestions, per your request)
+// TMDB key (exposed for search suggestions, per your request)
 const apiKey = '330845779e6588abc657b964887317fb';
 
 const LS_KEY = 'movieDiary_v1';
@@ -25,6 +25,9 @@ const sortEl = document.getElementById('sort');
 const exportBtn = document.getElementById('export-btn');
 const importFile = document.getElementById('import-file');
 
+const shareBtn = document.getElementById('share-link-btn');
+const loadFromLinkBtn = document.getElementById('load-from-link-btn');
+
 const list = document.getElementById('diary-list');
 
 let editingId = null;
@@ -41,13 +44,16 @@ function load(){
   try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); }
   catch { return []; }
 }
-function save(entries){ localStorage.setItem(LS_KEY, JSON.stringify(entries)); }
+function save(entries){
+  localStorage.setItem(LS_KEY, JSON.stringify(entries));
+}
 function escapeHtml(s){
-  return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+  return (s||"")
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
     .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
-// ------- Render list -------
+// ------- Render list (newest at top, highest number) -------
 function render(){
   const entries = load();
   const query = (qEl.value||'').toLowerCase().trim();
@@ -59,17 +65,17 @@ function render(){
     return matchesText && matchesType;
   });
 
-  // Default sort: newest first (top). We'll number so top has the HIGHEST number.
+  // Default sort: newest first (top)
   switch (sortEl.value){
-    case 'date-desc': filtered.sort((a,b)=> b.date.localeCompare(a.date)); break; // newest first
+    case 'date-desc': filtered.sort((a,b)=> b.date.localeCompare(a.date)); break;
     case 'date-asc':  filtered.sort((a,b)=> a.date.localeCompare(b.date)); break;
     case 'rating-desc': filtered.sort((a,b)=> (b.rating ?? -1) - (a.rating ?? -1)); break;
     case 'rating-asc':  filtered.sort((a,b)=> (a.rating ?? -1) - (b.rating ?? -1)); break;
-    default: filtered.sort((a,b)=> b.date.localeCompare(a.date)); // newest first
+    default: filtered.sort((a,b)=> b.date.localeCompare(a.date));
   }
 
   const total = filtered.length;
-  list.innerHTML = filtered.map((e,i)=> entryCardHTML(e, total - i)).join(''); // top = highest number
+  list.innerHTML = filtered.map((e,i)=> entryCardHTML(e, total - i)).join(''); // top gets highest number
 
   list.querySelectorAll('[data-action="edit"]').forEach(btn=>{
     btn.addEventListener('click', ()=> startEdit(btn.dataset.id));
@@ -157,7 +163,7 @@ form.addEventListener('submit', (ev)=>{
 });
 ratingEl.addEventListener('input', ()=> ratingOut.textContent = ratingEl.value);
 
-// ------- Filters & Import/Export -------
+// ------- Import/Export -------
 [qEl, filterTypeEl, sortEl].forEach(el => el.addEventListener('input', render));
 
 exportBtn.addEventListener('click', ()=>{
@@ -209,7 +215,7 @@ titleEl.addEventListener('input', async ()=>{
         <span>${escapeHtml(title)} ${year?`(${year})`:''}</span>
       </li>`;
     }).join('');
-  }catch(_e){ /* ignore abort or network errors */ }
+  }catch(_e){ /* ignore abort or network */ }
 });
 
 suggestions.addEventListener('click', e=>{
@@ -226,8 +232,54 @@ document.addEventListener('pointerdown', e=>{
   }
 },{capture:true});
 
-// ------- Init -------
+// ------- Cross-device, no server: Share via URL hash -------
+function toBase64(str) {
+  // safer UTF-8 handling
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function fromBase64(b64) {
+  return decodeURIComponent(escape(atob(b64)));
+}
+
+function createShareLink() {
+  const data = JSON.stringify(load());
+  const b64 = toBase64(data);
+  // Use hash so it never hits any server
+  const url = `${location.origin}${location.pathname}#d=${b64}`;
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(url)
+      .then(()=>alert('Share link copied to clipboard!'))
+      .catch(()=>prompt('Copy this URL:', url));
+  } else {
+    prompt('Copy this URL:', url);
+  }
+}
+
+function tryLoadFromHash() {
+  const m = location.hash.match(/#d=([^&]+)/);
+  if (!m) return false;
+  try {
+    const json = fromBase64(m[1]);
+    const arr = JSON.parse(json);
+    if (!Array.isArray(arr)) throw new Error('Not an array');
+    save(arr);
+    render();
+    alert('Loaded diary from link!');
+    return true;
+  } catch (e) {
+    alert('Failed to load from link.');
+    return false;
+  }
+}
+
+// Wire share buttons
+shareBtn?.addEventListener('click', createShareLink);
+loadFromLinkBtn?.addEventListener('click', tryLoadFromHash);
+
+// Auto-load if URL contains #d=...
 document.addEventListener('DOMContentLoaded', ()=>{
   dateEl.value = todayISO();
+  // If a link with data was opened, load it once and clear the hash
+  if (tryLoadFromHash()) location.hash = '';
   render();
 });
