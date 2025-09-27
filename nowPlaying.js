@@ -21,7 +21,7 @@ function nowPlayingUrl({ lang='en-US', region='US', page=1 }={}){
 async function fetchAllPages(urlBuilder, pages=3){
   // fetch first N pages for a decent list
   const lang = langInput.value || 'en-US';
-  const region = regionInput.value || 'US';
+  const region = regionInput.value || 'CH';
   const promises = Array.from({length: pages}, (_,i) => fetch(urlBuilder({lang, region, page: i+1})).then(r => r.json()));
   const results = await Promise.all(promises);
   return results.flatMap(x => x.results || []);
