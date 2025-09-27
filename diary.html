@@ -8,6 +8,7 @@
 </head>
 <body>
   <div class="bg-blur"></div>
+
   <header class="site-header glass">
     <nav class="nav">
       <a class="brand" href="./index.html">🎬 Glass Movies</a>
@@ -20,8 +21,11 @@
       <h1>Movie Diary</h1>
     </div>
   </header>
+
   <main class="container">
     <button id="show-form-btn" class="btn primary" style="margin-bottom:1rem">+ Add Movie</button>
+
+    <!-- Entry form -->
     <section class="glass card form-card hidden">
       <form id="entry-form" class="form-grid" autocomplete="off">
         <div class="field span-2" style="position:relative">
@@ -61,6 +65,7 @@
         </div>
       </form>
     </section>
+
     <section class="glass card">
       <div class="filters">
         <input id="q" type="search" placeholder="Search title/notes…" />
@@ -82,8 +87,10 @@
         </label>
       </div>
     </section>
+
     <section class="diary-list" id="diary-list"></section>
   </main>
+
   <script src="./diary.js" defer></script>
 </body>
 </html>
