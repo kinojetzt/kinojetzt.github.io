@@ -1,0 +1,102 @@
+name: Build & Deploy Pages (TMDB prefetch, no exposed key)
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *" # hourly; adjust as you like
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure jq is installed
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Prepare public/data
+        run: mkdir -p public/data
+
+      - name: Fetch TMDB datasets (trending/popular/top_rated)
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          set -euo pipefail
+          fetch_pages () {
+            local url_base="$1"
+            local out="$2"
+            local pages="${3:-5}"
+            tmpdir="$(mktemp -d)"
+            for p in $(seq 1 "$pages"); do
+              curl -sS "${url_base}&page=${p}" -o "${tmpdir}/${p}.json"
+            done
+            # merge all pages, keep .results arrays combined
+            jq -s '{results: map(.results) | add}' "${tmpdir}/"*.json > "public/data/${out}"
+            rm -rf "$tmpdir"
+          }
+
+          # 5 pages ~ 100-120 movies each list; tune as needed
+          fetch_pages "https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_API_KEY}" "trending.json" 5
+          fetch_pages "https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}" "popular.json" 5
+          fetch_pages "https://api.themoviedb.org/3/movie/top_rated?api_key=${TMDB_API_KEY}" "top_rated.json" 5
+
+      - name: Build combined all_movies.json (dedup by id)
+        run: |
+          set -euo pipefail
+          jq '{results: [.results[]]}' public/data/trending.json \
+          | jq '.results' > t.json
+          jq '{results: [.results[]]}' public/data/popular.json \
+          | jq '.results' > p.json
+          jq '{results: [.results[]]}' public/data/top_rated.json \
+          | jq '.results' > r.json
+          jq -s 'add | unique_by(.id) | {results: .}' t.json p.json r.json > public/data/all_movies.json
+          rm -f t.json p.json r.json
+
+      - name: Fetch trailers for all unique IDs → trailers.json
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          set -euo pipefail
+          ids=$(jq -r '.results[].id' public/data/all_movies.json | sort -u)
+          tmp="$(mktemp -d)"
+          echo '{ "trailers": {}}' > "${tmp}/trailers.json"
+
+          for id in $ids; do
+            # Fetch videos for each movie
+            json=$(curl -sS "https://api.themoviedb.org/3/movie/${id}/videos?api_key=${TMDB_API_KEY}&language=en-US")
+            # Find first YouTube Trailer
+            key=$(echo "$json" | jq -r '.results | map(select(.type=="Trailer" and .site=="YouTube")) | .[0].key // empty')
+            # Merge into object map { trailers: { "<id>": "<key>" } }
+            if [ -n "$key" ]; then
+              jq --arg id "$id" --arg key "$key" \
+                '.trailers[$id]=$key' "${tmp}/trailers.json" > "${tmp}/trailers.json.tmp" && mv "${tmp}/trailers.json.tmp" "${tmp}/trailers.json"
+            fi
+          done
+
+          mv "${tmp}/trailers.json" public/data/trailers.json
+          rm -rf "$tmp"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
