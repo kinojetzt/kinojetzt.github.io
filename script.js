@@ -1,4 +1,4 @@
-const apiKey = '330845779e6588abc657b964887317fb'; // Replace with your TMDb API key
+const apiKey = 'hidden';
 const trendingApiUrl = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
 const searchApiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=`;
 const speechBubble = document.getElementById('speech-bubble');
@@ -95,3 +95,4 @@ searchButton.addEventListener('click', () => {
         fetchMovies(`${searchApiUrl}${encodeURIComponent(query)}`);
     }
 });
+
