@@ -1,56 +1,38 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Now Playing — Glass Movies</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <div class="bg-blur"></div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Now Playing in Cinemas</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-blur"></div>
 
-    <header class="site-header glass">
-      <nav class="nav">
-        <a class="brand" href="./index.html">🎬 Glass Movies</a>
-        <div class="links">
-          <a class="link active" href="./index.html">Now Playing</a>
-          <a class="link" href="./diary.html">Movie Diary</a>
-        </div>
-      </nav>
-      <div class="header-content">
-        <h1>Now Playing in Cinemas</h1>
-        <p class="muted">Live data from TMDB — key exposed in frontend (you said that’s fine 🙂)</p>
-        <div class="controls">
-          <label class="control">
-            Region:
-            <input id="region-input" type="text" placeholder="e.g. US, DE, CH" value="US" />
-          </label>
-          <label class="control">
-            Language:
-            <input id="lang-input" type="text" placeholder="e.g. en-US, de-DE" value="en-US" />
-          </label>
-          <button id="refresh-btn" class="btn">Refresh</button>
-        </div>
+  <header class="site-header glass">
+    <nav class="nav">
+      <a class="brand" href="./index.html">🎬 Glass Movies</a>
+      <div class="links">
+        <a class="link active" href="./index.html">Now Playing</a>
+        <a class="link" href="./diary.html">Movie Diary</a>
       </div>
-    </header>
+    </nav>
+    <div class="header-content">
+      <h1>Now Playing in Cinemas</h1>
+    </div>
+  </header>
 
-    <main class="container">
-      <div id="movie-grid" class="grid"></div>
+  <main class="container">
+    <div id="movie-grid" class="grid"></div>
 
-      <!-- Speech bubble trailer -->
-      <div id="speech-bubble" class="bubble glass hidden" aria-live="polite">
-        <button class="bubble-close" id="bubble-close" aria-label="Close">×</button>
-        <div id="trailer-container" class="trailer"></div>
-        <div id="bubble-content"></div>
-      </div>
-    </main>
+    <!-- Speech bubble trailer -->
+    <div id="speech-bubble" class="bubble glass hidden" aria-live="polite">
+      <button class="bubble-close" id="bubble-close" aria-label="Close">×</button>
+      <div id="trailer-container" class="trailer"></div>
+      <div id="bubble-content"></div>
+    </div>
+  </main>
 
-    <footer class="site-footer glass">
-      <small class="muted">
-        This product uses the TMDB API but is not endorsed or certified by TMDB.
-      </small>
-    </footer>
-
-    <script src="./nowPlaying.js" defer></script>
-  </body>
+  <script src="./nowPlaying.js" defer></script>
+</body>
 </html>
