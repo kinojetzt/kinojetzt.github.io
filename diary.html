@@ -25,7 +25,7 @@
   <main class="container">
     <button id="show-form-btn" class="btn primary" style="margin-bottom:1rem">+ Add Movie</button>
 
-    <!-- Entry form -->
+    <!-- Entry form (hidden initially) -->
     <section class="glass card form-card hidden">
       <form id="entry-form" class="form-grid" autocomplete="off">
         <div class="field span-2" style="position:relative">
@@ -33,10 +33,12 @@
           <input id="title" type="search" placeholder="Search movie…" required />
           <ul id="search-suggestions" class="glass suggestions"></ul>
         </div>
+
         <div class="field">
           <label>Date watched</label>
           <input id="date" type="date" required />
         </div>
+
         <div class="field">
           <label>Rating (0–10)</label>
           <div class="rating-row">
@@ -44,6 +46,7 @@
             <output id="rating-out">7</output>
           </div>
         </div>
+
         <div class="field">
           <label>Watch type</label>
           <select id="watch-type">
@@ -51,14 +54,17 @@
             <option value="rewatch">Rewatch</option>
           </select>
         </div>
+
         <div class="field span-2">
           <label>Notes</label>
           <textarea id="notes" rows="3" placeholder="Thoughts…"></textarea>
         </div>
+
         <div class="field span-2">
           <label>Poster URL</label>
           <input id="poster-url" type="url" placeholder="Auto-filled when you pick from search" />
         </div>
+
         <div class="actions span-2">
           <button class="btn primary" type="submit">Add to Diary</button>
           <button class="btn subtle" type="button" id="clear-form-btn">Cancel</button>
@@ -66,6 +72,7 @@
       </form>
     </section>
 
+    <!-- Filters + Import/Export + Share -->
     <section class="glass card">
       <div class="filters">
         <input id="q" type="search" placeholder="Search title/notes…" />
@@ -80,14 +87,20 @@
           <option value="rating-desc">Rating ↓</option>
           <option value="rating-asc">Rating ↑</option>
         </select>
+
         <button id="export-btn" class="btn">Export JSON</button>
         <label class="file-btn btn">
           Import JSON
           <input id="import-file" type="file" accept="application/json" hidden />
         </label>
+
+        <!-- NEW: Serverless cross-device share -->
+        <button id="share-link-btn" class="btn">Create Share Link</button>
+        <button id="load-from-link-btn" class="btn">Load From Link</button>
       </div>
     </section>
 
+    <!-- Diary list -->
     <section class="diary-list" id="diary-list"></section>
   </main>
 
