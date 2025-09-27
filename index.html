@@ -8,6 +8,7 @@
 </head>
 <body>
   <div class="bg-blur"></div>
+
   <header class="site-header glass">
     <nav class="nav">
       <a class="brand" href="./index.html">🎬 Glass Movies</a>
@@ -20,14 +21,17 @@
       <h1>Now Playing in Cinemas</h1>
     </div>
   </header>
+
   <main class="container">
     <div id="movie-grid" class="grid"></div>
+
     <div id="speech-bubble" class="bubble glass hidden" aria-live="polite">
       <button class="bubble-close" id="bubble-close" aria-label="Close">×</button>
       <div id="trailer-container" class="trailer"></div>
       <div id="bubble-content"></div>
     </div>
   </main>
+
   <script src="./nowPlaying.js" defer></script>
 </body>
 </html>
