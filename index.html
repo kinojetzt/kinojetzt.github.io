@@ -1,26 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trending Movies</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Movies (TMDB • static, no exposed key)</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
     <header>
-        <h1>Trending Movies</h1>
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Search for movies...">
-            <button id="search-button">Search</button>
-        </div>
+      <h1>Trending Movies</h1>
+      <div class="search">
+        <input id="search-input" type="search" placeholder="Search local catalog…" />
+        <button id="search-button" type="button">Search</button>
+        <small class="hint">Searches across trending + popular + top rated (pre-fetched)</small>
+      </div>
     </header>
+
     <main>
-        <div id="movie-list" class="movie-list"></div>
+      <div id="movie-list" class="grid"></div>
+
+      <!-- Speech bubble -->
+      <div id="speech-bubble" class="bubble hidden" aria-live="polite">
+        <button class="bubble-close" id="bubble-close" aria-label="Close">×</button>
+        <div id="trailer-container" class="trailer"></div>
+        <div id="bubble-content"></div>
+      </div>
     </main>
-    <div id="speech-bubble" class="speech-bubble hidden">
-        <div id="trailer-container" class="trailer-container"></div>
-        <div id="bubble-content" class="bubble-content"></div>
-    </div>
-    <script src="script.js"></script>
-</body>
+
+    <script src="./script.js" defer></script>
+  </body>
 </html>
