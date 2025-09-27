@@ -1,5 +1,5 @@
 // ⚠️ Your TMDB key will be visible to anyone. Paste it below.
-const apiKey = 'YOUR_TMDB_API_KEY_HERE';
+const apiKey = '330845779e6588abc657b964887317fb';
 
 const speechBubble     = document.getElementById('speech-bubble');
 const trailerContainer = document.getElementById('trailer-container');
